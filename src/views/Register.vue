@@ -171,7 +171,24 @@
           </div>
         </div>
 
-        <div class="mx-auto">
+         
+        <div>
+          <label
+            for="facebook"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Area of Expertise:</label
+          >
+          <input
+            type="text"
+            name="expertise"
+             v-model="expertise"
+            id="facebook"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+            placeholder="Engineering, IT, Law, Social Science, Medcine, etc"
+          />
+        </div>
+
+        <!-- <div class="mx-auto">
           <label
             for="expertise"
             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -189,7 +206,7 @@
             <option :value="'Social Science'">Social Science</option>
             <option :value="'Medicine'">Medicine</option>
           </select>
-        </div>
+        </div> -->
 
         <label
           for="social"
