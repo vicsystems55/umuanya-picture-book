@@ -49,8 +49,8 @@
             <td class="px-6 py-4">
               <div class="relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
                 <img
-                  v-if="member.profile_picture"
-                  :src="member.profile_picture"
+                  v-if="member.image_url"
+                  :src="prepareUrl(member.image_url)"
                   alt="Profile Picture"
                   class="absolute w-12 h-12 -left-1"
                 />
@@ -102,11 +102,16 @@ export default {
     this.fetchMembers();
   },
   methods: {
+
+    prepareUrl(img){
+      return process.env.VUE_APP_URL+'/storage/'+img;
+    },
     fetchMembers() {
       axios
         .get(`${process.env.VUE_APP_URL}/api/umuanya-members`)
         .then((response) => {
           this.members = response.data;
+          console.log(response.data)
         })
         .catch((error) => {
           console.error('Error fetching members:', error);
