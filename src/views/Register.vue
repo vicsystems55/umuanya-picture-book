@@ -41,6 +41,82 @@
           />
         </div>
 
+
+        <div>
+          <label
+            for="fathers"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Address:</label
+          >
+          <input
+            type="text"
+            name="address"
+            id="address"
+            v-model="address"
+            placeholder="Enter resisdential address"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+            required
+          />
+        </div>
+
+        <div>
+          <label
+            for="Phone"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Phone:</label
+          >
+          <input
+            type="text"
+            name="phone"
+            id="phone"
+            v-model="phone"
+            placeholder="(+234) ****** "
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+            required
+          />
+        </div>
+
+
+        <div class="">
+            <label
+              for="marital_status"
+              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >Marital Status</label
+            >
+            <div class="flex items-center mb-4">
+              <input
+                id="default-radio-1"
+                type="radio"
+                v-model="marital_status"
+                :value="'Single'"
+                name="default-radio"
+                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              />
+              <label
+                for="default-radio-1"
+                class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                >Single</label
+              >
+            </div>
+            <div class="flex items-center mb-4">
+              <input
+                checked
+                id="default-radio-2"
+                type="radio"
+                v-model="marital_status"
+                :value="'Married'"
+                name="default-radio"
+                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              />
+              <label
+                for="default-radio-2"
+                class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                >Married</label
+              >
+            </div>
+
+          </div>
+
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
           <div class="">
             <label
@@ -336,6 +412,9 @@ export default {
       file: null,
       preview: null,
       loading: false,
+      address: '',
+      phone:'',
+      marital_status:'',
     };
   },
   methods: {
@@ -365,6 +444,10 @@ export default {
       formData.append('facebook_url', this.facebook_url);
       formData.append('linkedin_url', this.linkedin_url);
       formData.append('other_accounts_url', this.other_accounts_url);
+      formData.append('address', this.address);
+      formData.append('marital_status', this.marital_status);
+      formData.append('phone', this.phone);
+
       if (this.file) {
         formData.append('profile_picture', this.file); // Assuming `this.file` holds the uploaded file
       }

@@ -21,7 +21,7 @@
       </button>
       <button
         type="button"
-         @click="downloadMembersPDF"
+         @click="downloadPdf"
         class="text-white bg-orange-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
       >
         Export as PDF
@@ -52,6 +52,7 @@
                 <img
                   v-if="member.image_url"
                   :src="prepareUrl(member.image_url)"
+                  style="object-fit: cover;"
                   alt="Profile Picture"
                   class="absolute w-12 h-12 -left-1"
                 />
@@ -108,36 +109,38 @@ export default {
       return process.env.VUE_APP_URL+'/storage/'+img;
     },
 
-    downloadMembersPDF() {
-      const apiUrl = `${process.env.VUE_APP_URL}/api/umuanya-members-pdf`;
+    async downloadPdf() {
+      try {
+        const response = await axios.post(`${process.env.VUE_APP_URL}/api/umuanya-members-pdf`, {
+          responseType: 'blob', // Ensures the response is treated as a file (binary data)
+          headers: {
+            'Content-Type': 'application/json', // Required for FormData
+          },
+        },
+        
+      
+      );
 
-      axios
-        .post(apiUrl, {
-          responseType: "blob", // Important: ensures the response is treated as a file
-        })
-        .then((response) => {
-          // Create a Blob from the response data
-          const blob = new Blob([response.data], { type: "application/pdf" });
+        // Create a Blob from the response data
+        const blob = new Blob([response.data], { type: 'application/pdf' });
 
-          // Create a link element
-          const link = document.createElement("a");
-          link.href = URL.createObjectURL(blob);
-          link.download = "umuanya_members.pdf"; // Set the file name for download
-          
-          // Append the link to the document and trigger click
-          document.body.appendChild(link);
-          link.click();
+        // Create a URL for the Blob
+        const url = window.URL.createObjectURL(blob);
 
-          // Clean up
-          document.body.removeChild(link);
-          URL.revokeObjectURL(link.href);
+        // Create an anchor element and simulate a click to trigger download
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'members_with_images.pdf'); // Set the desired file name
+        document.body.appendChild(link);
+        link.click();
 
-          console.log("PDF downloaded successfully.");
-        })
-        .catch((error) => {
-          console.error("Error downloading PDF:", error);
-          alert("Failed to download the PDF. Please try again.");
-        });
+        // Cleanup
+        link.remove();
+        window.URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error('Error downloading the PDF:', error);
+        alert('Failed to download the PDF. Please try again.');
+      }
     },
 
     fetchMembers() {
