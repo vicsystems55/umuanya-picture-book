@@ -21,6 +21,7 @@
       </button>
       <button
         type="button"
+         @click="downloadMembersPDF"
         class="text-white bg-orange-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
       >
         Export as PDF
@@ -106,6 +107,39 @@ export default {
     prepareUrl(img){
       return process.env.VUE_APP_URL+'/storage/'+img;
     },
+
+    downloadMembersPDF() {
+      const apiUrl = `${process.env.VUE_APP_URL}/api/umuanya-members-pdf`;
+
+      axios
+        .post(apiUrl, {
+          responseType: "blob", // Important: ensures the response is treated as a file
+        })
+        .then((response) => {
+          // Create a Blob from the response data
+          const blob = new Blob([response.data], { type: "application/pdf" });
+
+          // Create a link element
+          const link = document.createElement("a");
+          link.href = URL.createObjectURL(blob);
+          link.download = "umuanya_members.pdf"; // Set the file name for download
+          
+          // Append the link to the document and trigger click
+          document.body.appendChild(link);
+          link.click();
+
+          // Clean up
+          document.body.removeChild(link);
+          URL.revokeObjectURL(link.href);
+
+          console.log("PDF downloaded successfully.");
+        })
+        .catch((error) => {
+          console.error("Error downloading PDF:", error);
+          alert("Failed to download the PDF. Please try again.");
+        });
+    },
+
     fetchMembers() {
       axios
         .get(`${process.env.VUE_APP_URL}/api/umuanya-members`)
