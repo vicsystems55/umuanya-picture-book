@@ -207,7 +207,7 @@
               <label
                 for="default-radio-2"
                 class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                >25-29</label
+                >25-39</label
               >
             </div>
 

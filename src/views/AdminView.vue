@@ -26,6 +26,17 @@
       >
         Export as PDF
       </button>
+          <!-- Show the download link if available -->
+    <div v-if="pdfLink" class="mt-5">
+      <a
+        :href="pdfLink"
+        target="_blank"
+        download
+        class="text-blue-700 underline hover:text-blue-900"
+      >
+        Download Generated PDF
+      </a>
+    </div>
     </div>
 
     <!-- Members Table -->
@@ -98,6 +109,8 @@ export default {
   data() {
     return {
       members: [],
+      pdfLink: null, // Stores the link to the generated PDF
+      loading: false, // Optional: Tracks the loading state
     };
   },
   created() {
@@ -109,39 +122,33 @@ export default {
       return process.env.VUE_APP_URL+'/storage/'+img;
     },
 
+    prepareDownloadLink(img){
+      return process.env.VUE_APP_URL+img;
+    },
+
     async downloadPdf() {
       try {
-        const response = await axios.post(`${process.env.VUE_APP_URL}/api/umuanya-members-pdf`, {
-          responseType: 'blob', // Ensures the response is treated as a file (binary data)
-          headers: {
-            'Content-Type': 'application/json', // Required for FormData
-          },
-        },
-        
-      
-      );
+        this.loading = true; // Optional: Add a loading indicator if needed.
 
-        // Create a Blob from the response data
-        const blob = new Blob([response.data], { type: 'application/pdf' });
+        // Call the backend API
+        const response = await axios.post(`${process.env.VUE_APP_URL}/api/umuanya-members-pdf`);
 
-        // Create a URL for the Blob
-        const url = window.URL.createObjectURL(blob);
-
-        // Create an anchor element and simulate a click to trigger download
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'members_with_images.pdf'); // Set the desired file name
-        document.body.appendChild(link);
-        link.click();
-
-        // Cleanup
-        link.remove();
-        window.URL.revokeObjectURL(url);
+        // Check if the response contains the file path
+        if (response.data && response.data.path) {
+          // Update the UI to display the download link
+          this.pdfLink = this.prepareDownloadLink(response.data.path);
+          alert('PDF generated successfully! Click the link to download.');
+        } else {
+          alert('PDF generation failed. Please try again.');
+        }
       } catch (error) {
-        console.error('Error downloading the PDF:', error);
-        alert('Failed to download the PDF. Please try again.');
+        console.error('Error generating PDF:', error);
+        alert('Failed to generate the PDF. Please check your connection or try again later.');
+      } finally {
+        this.loading = false;
       }
     },
+
 
     fetchMembers() {
       axios
