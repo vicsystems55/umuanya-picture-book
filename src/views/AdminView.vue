@@ -13,12 +13,12 @@
 
     <!-- Export Buttons -->
     <div class="container py-5 text-center">
-      <button
+      <!-- <button
         type="button"
         class="text-white mr-5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
       >
         Export as Excel
-      </button>
+      </button> -->
       <button
         type="button"
          @click="downloadPdf"
@@ -89,11 +89,10 @@
             <td class="px-6 py-4">{{ member.age_range }}</td>
             <td class="px-6 py-4">{{ member.expertise }}</td>
             <td class="px-6 py-4">
-              <a
-                href="#"
-                class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                >Edit</a
-              >
+              <button
+                @click="removeMember(member.id)"
+                class="font-medium text-red-600 dark:text-red-500 hover:underline"
+                >Remove</button>
             </td>
           </tr>
         </tbody>
@@ -147,6 +146,24 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+
+
+    removeMember(id){
+
+      axios
+        .post(`${process.env.VUE_APP_URL}/api/remove-member`,{id: id})
+        .then((response) => {
+         
+          console.log(response.data)
+          this.fetchMembers()
+        })
+        .catch((error) => {
+          console.error('Error removing member:', error);
+          alert('Failed to remove member. Please try again later.');
+        });
+
+
     },
 
 

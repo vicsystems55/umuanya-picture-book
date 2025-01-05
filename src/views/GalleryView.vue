@@ -1,5 +1,11 @@
 <template>
     <section class="container mx-auto">
+
+      <div class="container h-58">
+        <h2 class="text-5xl text-center mb-2 py-5">Picture Book</h2>
+
+      </div>
+
         
 <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
 
